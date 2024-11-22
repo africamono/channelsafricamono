@@ -1,4 +1,4 @@
-﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -156,10 +156,27 @@
       object-fit: cover;
     }
 
-    /* Esconder o slideshow no modo dispositivo */
+    /* Responsividade para o slide */
     @media (max-width: 768px) {
       .slideshow-container {
-        display: none;
+        height: 250px;  /* Ajustando a altura para dispositivos móveis */
+      }
+    }
+
+    /* Responsividade para os botões */
+    @media (max-width: 500px) {
+      .Nav {
+        grid-template-columns: repeat(2, 1fr); /* 2 colunas no mobile */
+        gap: 5px; /* Reduzindo o espaçamento */
+      }
+
+      a {
+        height: 100px; /* Reduzindo altura */
+        font-size: 24px; /* Ajustando tamanho da fonte */
+      }
+
+      a span:first-child {
+        font-size: 32px; /* Reduzindo tamanho do ícone */
       }
     }
 
