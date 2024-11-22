@@ -1,0 +1,209 @@
+﻿
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Menu with Slide Background</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  
+  <!-- Importando a fonte do Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* FontAwesome Settings */
+    [class*="fontawesome-"]:before {
+      font-family: 'FontAwesome', sans-serif;
+    }
+
+    body {
+      background-color: #121212;  /* Dark background */
+      overflow: hidden;
+      user-select: none;
+      margin: 0;
+      padding: 0;
+      color: #fff;  /* Text color for dark mode */
+      font-family: 'Roboto', sans-serif;  /* Alterando a fonte do corpo para Roboto */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Imagem de fundo para dispositivos maiores (PC) */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi4fbOM4-vOM1K4ALN6PpV_Az3X_M2svmZXn85qB13cPoJD_xnRi5usHOVULwxzojxjrzHMYlgxtKcSqLThDxiFTwdyY9oCXh4m3DjcHJSV4q9oVaLhyphenhyphenZv3ZsDlyFwduNJ9gSfcNnGtoht2XYQGJJipbjGj_bPsSIlXv5KyyoTHF8-asMtEkL5PeH2_2Wo/s1600/Cine%202.00_00_03_04.Still002%20e.png') no-repeat center center fixed;
+      background-size: cover;
+      z-index: -1;  /* Ensure the image stays behind the content */
+    }
+
+    /* Imagem de fundo para dispositivos móveis */
+    @media (max-width: 768px) {
+      body::before {
+        background: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi4FTr9xHaHIyoDWm0JQtVCYiug2seq5CEtkFAdSQdgqZd0CDHFDQCBfOupD0VxaXDa6f8NQMdzRPs2sZS3s8w70YDoBe13isKXAcwoSg6L35jF1oXHWMrJM8YYPDPRx9p1IYRek1QK64mhRuw33blRUwZ1jdeHDopp0ea4fE3Ewyfy34A4iOhZ-fwAdGo/s1600/Cine%202.00_00_03_04.Still002%203.png') no-repeat center center fixed;
+        background-size: cover;
+      }
+    }
+
+    .Nav {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);  /* 4 columns */
+      grid-template-rows: repeat(2, 1fr);  /* 2 rows */
+      gap: 10px;  /* Equal gap between items */
+      width: 80%;
+      max-width: 800px;
+      height: auto;
+      z-index: 1;
+      justify-items: center;
+      align-items: center;
+      justify-content: center;  /* Adicionando centralização */
+    }
+
+    a {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 150px;
+      font-size: 28px;
+      text-decoration: none;
+      color: #fff;
+      background: #333;  /* Button background for dark mode */
+      border-radius: 5px;
+      transition: background 0.3s, transform 0.1s;
+      box-shadow: none;
+      font-family: 'Roboto', sans-serif;  /* Alterando a fonte dos links para Roboto */
+    }
+
+    a span {
+      display: block;
+    }
+
+    a span:first-child {
+      font-size: 40px;  /* Icon size */
+    }
+
+    a span:last-child {
+      font-size: 14px;  /* Text size */
+      margin-top: 5px;
+    }
+
+    a:nth-child(1) {
+      background: #1abc9c;
+    }
+
+    a:nth-child(2) {
+      background: #2ecc71;
+    }
+
+    a:nth-child(3) {
+      background: #3498db;
+    }
+
+    a:nth-child(4) {
+      background: #9b59b6;
+    }
+
+    a:nth-child(5) {
+      background: #f1c40f;
+    }
+
+    a:nth-child(6) {
+      background: #e67e22;
+    }
+
+    a:nth-child(7) {
+      background: #e74c3c;
+    }
+
+    a:nth-child(8) {
+      background: #34495e;
+    }
+
+    a:hover {
+      background: #555;  /* Darker on hover */
+      transform: scale(1.1);  /* Slightly enlarge the button */
+    }
+
+    a:active {
+      transform: scale(0.9);  /* Make button shrink when clicked */
+    }
+
+    /* Slideshow settings */
+    .slideshow-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 350px; /* Ajustando a altura */
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .slide {
+      display: none;
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    /* Esconder o slideshow no modo dispositivo */
+    @media (max-width: 768px) {
+      .slideshow-container {
+        display: none;
+      }
+    }
+
+    /* Slide Animation */
+    @keyframes fade {
+      0% { opacity: 0; }
+      25% { opacity: 1; }
+      50% { opacity: 1; }
+      75% { opacity: 0; }
+      100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="Nav">
+  <a href="#"><span class="fa fa-music"></span><span>MUSIC</span></a>
+  <a href="#"><span class="fas fa-film"></span><span>CINE</span></a>
+  <a href="#"><span class="fas fa-hands"></span><span>KUDURO</span></a>
+  <a href="#"><span class="fas fa-newspaper"></span><span>NEWS</span></a>
+  <a href="#"><span class="fas fa-futbol"></span><span>SPORT</span></a>
+  <a href="#"><span class="fas fa-child"></span><span>KIDS</span></a>
+  <a href="#"><span class="fas fa-church"></span><span>CHURCH</span></a>
+  <a href="#"><span class="fas fa-cogs"></span><span>Settings</span></a>
+</div>
+
+<!-- Slideshow Container -->
+<div class="slideshow-container">
+  <img class="slide" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh5ZJQuMilZ2130IykQR-KlTGkXZRd9oatIxTCACXs8VBWxiv0WNXkeGrsXdcKBv59ZLOqkLTqvqSyHRPfH3j-0Tp4lUy3NBli_37TF4utjASV7U1nbmIP08KPcjUOJ_CyGRnuosfiYQI9HBs-CA5gb2gfC8Hmv_ceWm4iRfQnkl3Z6D0VJwjtiRdXKCbU/s1600/LEWATE.png" style="animation: fade 12s infinite;">
+</div>
+
+<script>
+  $(document).ready(function() {
+    let currentIndex = 0;
+    const slides = $('.slide');
+    slides.eq(currentIndex).show();
+
+    setInterval(function() {
+      slides.eq(currentIndex).fadeOut();
+      currentIndex = (currentIndex + 1) % slides.length;
+      slides.eq(currentIndex).fadeIn();
+    }, 3000);
+  });
+</script>
+
+</body>
+</html>
